@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @file bmijs.module
+ * Displays a javascript-based BMI calculator in a block.
+ */
+
+/**
+ * Implements hook_block_info().
+ */
+function bmijs_block_info() {
+  $blocks = array();
+
+  $blocks['calculator'] = array(
+    'info' => t('BMI Calculator'),
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function bmijs_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'calculator':
+      $block['subject'] = t('BMI Calculator');
+      $block['content'] = drupal_get_form('bmijs_calculator_form');
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Builds the BMI Calculator form.
+ */
+function bmijs_calculator_form($form, &$form_state) {
+  $form = array();
+
+  $form['height'] = array(
+    '#title' => t('Height'),
+    '#type' => 'textfield',
+    '#size' => 8,
+    '#field_suffix' => t('meters'),
+  );
+  $form['weight'] = array(
+    '#title' => t('Weight'),
+    '#type' => 'textfield',
+    '#size' => 8,
+    '#field_suffix' => t('kg'),
+  );
+  $form['results'] = array(
+    '#type' => 'container',
+  );
+  $form['results']['display'] = array(
+    '#type' => 'markup',
+    '#markup' => t('Please enter your data to calculate your BMI.'),
+  );
+
+  $form['#attached']['js'][] = drupal_get_path('module', 'bmijs') . '/bmijs.js';
+
+  return $form;
+}
